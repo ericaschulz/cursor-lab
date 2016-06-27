@@ -2,6 +2,7 @@ package org.codeforcoffee.planetssql;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -42,8 +43,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert("planets", null, planet);
     }
 
-//    public Planet getPlanetById(int id) {
-//
-//        return new Planet();
-//    }
+
+    public Planets getPlanetById(int id) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = new String[]{"id", "name", "position", "fact" };
+        String selection = "id =?";
+        String[] selectionArguments = new String[]{Integer.toString(id)};
+
+        Cursor c = db.query("planets", projection, selection, selectionArguments, null, null, null, null);
+        c.moveToFirst();
+
+
+        int planetId = Integer.parseInt(c.getString(c.getColumnIndex("id")));
+        String planetName = c.getString(c.getColumnIndex("name"));
+
+        Planets planets = new Planets(planetId, planetName, 0, null);
+
+
+        return planets;
+    }
+
+
 }
+
+
+
+
+
+
+
+
